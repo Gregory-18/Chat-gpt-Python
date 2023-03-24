@@ -1,23 +1,68 @@
-#Importamos las librerias
+# Importamos las librerias
 import openai
-import config #modulo donde esta la api_key
+import config  # modulo donde esta la api_key
+import typer
+from rich import print
+from rich.table import Table
 
-#configuramos la api_key
-openai.api_key = config.api_key
 
-#definimos el contexto del asistente
-messages = [{'role':'system', 
-             'content': 'Eres un asistente'}]
+def main():
+    # configuramos la api_key
+    openai.api_key = config.api_key
 
-#definimos el mensaje
-content = input('Sobre que quieres hablar?')
+    print("🤖 [bold green]ChatGPT API con Python[/bold green]")
 
-#definimos el rol de usuario
-messages.append({'role':'user', 'content': content})
+    table = Table("Comandos", "Descripcion")
+    table.add_row("salir", "Salir de la aplicacion")
+    table.add_row("nuevo", "Crear una nueva conversacion")
 
-#definimos la respuesta
-response = openai.ChatCompletion.create(model='gpt-3.5-turbo',
-                                        messages=messages)
+    print(table)
 
-#Se imprime la respuesta
-print(response.choices[0].message.content)
+    # Contexto del asistente
+    context = {"role": "system", "content": "Eres un asistente de programacion"}
+
+    # definimos el contexto del asistente
+    messages = [context]
+
+    while True:
+        # definimos el mensaje
+        content = __prompt()
+
+        if content == "nuevo":
+            print("🆕 Nueva Conversacion")
+            messages = [context]
+            content = __prompt()
+
+        # definimos el rol de usuario
+        messages.append({"role": "user", "content": content})
+
+        # definimos la respuesta
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo", messages=messages
+        )
+
+        # definimos la respuesta
+        respuesta_contenido = response.choices[0].message.content
+
+        # definimos el rol de asistente y guardara la respuestas
+        messages.append({"role": "assistant", "content": respuesta_contenido})
+
+        # Se imprime la respuesta
+        print(f'[bold green]> [/bold green] [green]{respuesta_contenido}[/green]')
+
+
+def __prompt() -> str:
+    # definimos el mensaje
+    prompt = typer.prompt("\n¿Sobre que quieres hablar? ")
+
+    if prompt == "salir":
+        salir = typer.confirm("🤚 ¿Realmente quieres salir?")
+        if salir:
+            print('👋 ¡Hasta luego!')
+            raise typer.Abort()
+        return __prompt()
+    
+    return prompt
+
+if __name__ == "__main__":
+    typer.run(main)
