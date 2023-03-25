@@ -1,2 +1,7 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 #Se define una variable con la api_key
-api_key = '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'
+api_key = os.getenv('api_key')
