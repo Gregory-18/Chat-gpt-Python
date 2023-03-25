@@ -18,10 +18,10 @@ def main():
 
     print(table)
 
-    # Contexto del asistente
+    # Contexto del sistema
     context = {"role": "system", "content": "Eres un asistente de programacion"}
 
-    # definimos el contexto del asistente
+    # definimos la variable
     messages = [context]
 
     while True:
@@ -41,10 +41,10 @@ def main():
             model="gpt-3.5-turbo", messages=messages
         )
 
-        # definimos la respuesta
+        # definimos la variable respuesta
         respuesta_contenido = response.choices[0].message.content
 
-        # definimos el rol de asistente y guardara la respuestas
+        # definimos el rol de asistente y guardara las respuestas
         messages.append({"role": "assistant", "content": respuesta_contenido})
 
         # Se imprime la respuesta
