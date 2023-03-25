@@ -8,7 +8,7 @@ from rich.table import Table
 
 def main():
     # configuramos la api_key
-    openai.api_key = config.api_key
+    openai.api_key = config.OPENAI_API_KEY
 
     print("🤖 [bold green]ChatGPT API con Python[/bold green]")
 
